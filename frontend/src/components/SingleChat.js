@@ -241,7 +241,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     ) : null}
     <Input
       variant="filled"
-      bg="rgba(255,255,255,0.8)" 
+      bg="rgba(255, 255, 255, 0.8)" 
       color="white"
       placeholder="Enter a message.."
       value={newMessage}

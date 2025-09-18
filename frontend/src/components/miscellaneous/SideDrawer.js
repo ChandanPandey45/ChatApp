@@ -252,7 +252,7 @@ function SideDrawer() {
           mr={2}
           value={search}
           onChange={handleSearchChange}
-          bg="whiteAlpha.800" // makes the input slightly opaque for readability
+          bg="whiteAlpha.800" 
         />
         <Button onClick={() => debouncedSearch(search)}>Go</Button>
       </Box>
