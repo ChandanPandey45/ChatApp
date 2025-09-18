@@ -1,67 +1,41 @@
-import { ViewIcon } from "@chakra-ui/icons";
 import {
   Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Button,
-  useDisclosure,
-  IconButton,
+  Avatar,
+  Box,
   Text,
-  Image,
+  useDisclosure,
 } from "@chakra-ui/react";
 
-const ProfileModal = ({ user, children }) => {
+function ProfileModal({ user, children }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
-      {children ? (
-        <span onClick={onOpen}>{children}</span>
-      ) : (
-        <IconButton d={{ base: "flex" }} icon={<ViewIcon />} onClick={onOpen} />
-      )}
-      <Modal size="lg" onClose={onClose} isOpen={isOpen} isCentered>
+      <Box onClick={onOpen}>{children}</Box>
+
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent h="410px">
-          <ModalHeader
-            fontSize="40px"
-            fontFamily="Work sans"
-            d="flex"
-            justifyContent="center"
-          >
-            {user.name}
+        <ModalContent>
+          <ModalHeader display="flex" flexDirection="column" alignItems="center">
+            <Avatar size="2xl" name={user.name} src={user.pic} mb={4} />
+            <Text fontSize="2xl" fontWeight="bold">{user.name}</Text>
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody
-            d="flex"
-            flexDir="column"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Image
-              borderRadius="full"
-              boxSize="150px"
-              src={user.pic}
-              alt={user.name}
-            />
-            <Text
-              fontSize={{ base: "28px", md: "30px" }}
-              fontFamily="Work sans"
-            >
-              Email: {user.email}
-            </Text>
+          <ModalBody display="flex" flexDirection="column" alignItems="center" pb={6}>
+            <Box mb={3}>
+              <Text fontWeight="semibold">Email:</Text>
+              <Text>{user.email}</Text>
+            </Box>
           </ModalBody>
-          <ModalFooter>
-            <Button onClick={onClose}>Close</Button>
-          </ModalFooter>
         </ModalContent>
       </Modal>
     </>
   );
-};
+}
 
 export default ProfileModal;
