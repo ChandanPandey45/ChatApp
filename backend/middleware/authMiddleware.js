@@ -5,29 +5,23 @@ const asyncHandler = require("express-async-handler");
 const protect = asyncHandler(async (req, res, next) => {
   let token;
 
-  // Check Authorization header
   if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
     try {
-      // Extract token
       token = req.headers.authorization.split(" ")[1];
-
-      // Verify JWT
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      // Attach user to req object (exclude password)
-      req.user = await User.findById(decoded.id).select("-password");
+      const user = await User.findById(decoded.id).select("-password");
+      if (!user) {
+        return res.status(401).json({ message: "User not found" });
+      }
 
+      req.user = user;
       next();
     } catch (error) {
-      res.status(401);
-      throw new Error("Not authorized, token failed");
+      return res.status(401).json({ message: "Not authorized, token failed" });
     }
-  }
-
-  // If token not provided
-  if (!token) {
-    res.status(401);
-    throw new Error("Not authorized, no token");
+  } else {
+    return res.status(401).json({ message: "Not authorized, no token" });
   }
 });
 

@@ -89,19 +89,26 @@ const verifyUser = asyncHandler(async (req, res) => {
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
+  // Find user by email
   const user = await User.findOne({ email });
-  if (user && (await user.matchPassword(password))) {
-    // Send OTP for login verification
-    const otp = generateOTP();
-    otpStore[email] = otp;
-    await sendEmail(email, "Login Verification OTP", `Your OTP is: ${otp}`);
 
-    res.json({ message: "OTP sent to email. Please verify to complete login." });
+  if (user && (await user.matchPassword(password))) {
+    // Generate JWT token directly
+    const token = generateToken(user._id);
+
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      pic: user.pic,
+      token, // send token to frontend
+    });
   } else {
     res.status(401);
     throw new Error("Invalid Email or Password");
   }
 });
+
 
 // @desc    Verify login OTP
 // @route   POST /api/user/verify-login-otp
