@@ -4,3 +4,7 @@
   overflow-y: scroll;
   scrollbar-width: none;
 }
+.chatbox {
+background-color: #d0f0f6;
+width: 100%;
+}
