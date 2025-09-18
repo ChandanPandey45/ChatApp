@@ -196,67 +196,81 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 </>
               ))}
           </Text>
-     <Box
-  d="flex"
-  flexDir="column"
-  justifyContent="flex-end"
-  p={3}
-  w="100%"
-  h="100%"
-  borderRadius="lg"
-  overflowY="hidden"
-  bgImage="url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80')" // your blue background image
-  bgSize="cover"
-  bgPosition="center"
->
-  {loading ? (
-    <Spinner
-      size="xl"
-      w={20}
-      h={20}
-      alignSelf="center"
-      margin="auto"
-      color="white"
-    />
-  ) : (
-    <div className="messages">
-      <ScrollableChat messages={messages} />
-    </div>
-  )}
+          <Box
+            d="flex"
+            flexDir="column"
+            justifyContent="flex-end"
+            p={3}
+            w="100%"
+            h="100%"
+            borderRadius="lg"
+            overflow="hidden"
+            bg="white"
+          >
+            {loading ? (
+              <Spinner
+                size="xl"
+                w={20}
+                h={20}
+                alignSelf="center"
+                margin="auto"
+                color="blue.500"
+              />
+            ) : (
+              <div className="messages">
+                <ScrollableChat messages={messages} />
+              </div>
+            )}
 
-  <FormControl
-    onKeyDown={sendMessage}
-    id="first-name"
-    isRequired
-    mt={3}
-  >
-    {istyping ? (
-      <div>
-        <Lottie
-          options={defaultOptions}
-          width={70}
-          style={{ marginBottom: 15, marginLeft: 0 }}
-        />
-      </div>
-    ) : null}
-    <Input
-      variant="filled"
-      bg="rgba(255, 255, 255, 0.8)" 
-      color="white"
-      placeholder="Enter a message.."
-      value={newMessage}
-      onChange={typingHandler}
-    />
-  </FormControl>
-</Box>
-
-
+            <FormControl
+              onKeyDown={sendMessage}
+              id="first-name"
+              isRequired
+              mt={3}
+              position="relative"
+              zIndex={1}
+            >
+              {istyping ? (
+                <div>
+                  <Lottie
+                    options={defaultOptions}
+                    width={70}
+                    style={{ marginBottom: 15, marginLeft: 0 }}
+                  />
+                </div>
+              ) : null}
+              <Input
+                variant="filled"
+                bg="rgba(255, 255, 255, 0.9)"
+                color="gray.800"
+                placeholder="Enter a message.."
+                value={newMessage}
+                onChange={typingHandler}
+                border="1px solid"
+                borderColor="gray.200"
+                _hover={{
+                  bg: "rgba(255, 255, 255, 0.95)",
+                  borderColor: "purple.300"
+                }}
+                _focus={{
+                  bg: "white",
+                  borderColor: "purple.400",
+                  boxShadow: "0 0 0 1px rgba(102, 126, 234, 0.3)"
+                }}
+                borderRadius="lg"
+                fontSize="md"
+                py={6}
+                backdropFilter="blur(10px)"
+              />
+            </FormControl>
+          </Box>
         </>
       ) : (
         // to get socket.io on same page
         <Box d="flex" alignItems="center" justifyContent="center" h="100%" className="chatbox">
-          <Text fontSize="3xl" pb={3} fontFamily="Work sans">
-            Click on a user to start chatting
+          <Text fontSize="5xl" pb={3} fontFamily="Work sans" color="black" textWeight="bold">
+            {/* Click on a user to start chatting */}
+            Start a conversation!
           </Text>
         </Box>
       )}
