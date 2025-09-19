@@ -15,7 +15,7 @@ import animationData from "../animations/typing.json";
 import io from "socket.io-client";
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 import { ChatState } from "../Context/ChatProvider";
-const ENDPOINT = "https://chat-app-backend.onrender.com";
+const ENDPOINT = "https://chat-guis.onrender.com";
 // const ENDPOINT = "http://localhost:5000";
 var socket, selectedChatCompare;
 
