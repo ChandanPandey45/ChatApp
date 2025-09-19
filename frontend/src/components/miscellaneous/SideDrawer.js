@@ -65,7 +65,7 @@ function SideDrawer() {
       setLoading(true);
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
       const { data } = await axios.get(
-        `http://localhost:3000/api/user?search=${query}`,
+        `${BACKEND_URL}/api/user?search=${query}`,
         config
       );
       setSearchResult(data);
@@ -99,7 +99,7 @@ function SideDrawer() {
         },
       };
       const { data } = await axios.post(
-        "http://localhost:3000/api/chat",
+        `${BACKEND_URL}/api/chat`,
         { userId },
         config
       );
