@@ -150,7 +150,8 @@ function SideDrawer() {
         </Tooltip>
 
         <Text fontSize="2xl" fontFamily="Work sans">
-          Chatty
+          {/* Chatty */}
+          The Messenger World
         </Text>
 
         <Box display="flex" alignItems="center">
@@ -240,7 +241,7 @@ function SideDrawer() {
 >
   <DrawerOverlay />
   <DrawerContent
-    bg="rgba(255, 255, 255, 0.2)" 
+    bg="rgba(177, 165, 165, 0.2)" 
     backdropFilter="blur(3px)"    
     maxW={{ base: "100%", md: "400px" }}
   >
