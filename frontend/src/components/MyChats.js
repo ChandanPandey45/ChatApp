@@ -44,7 +44,8 @@ const MyChats = ({ fetchAgain }) => {
       flexDir="column"
       alignItems="center"
       p={4}
-      bg="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+      // bg="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+      bg="transparent"
       w={{ base: "100%", md: "31%" }}
       borderRadius="xl"
       borderWidth="1px"
@@ -93,7 +94,7 @@ const MyChats = ({ fetchAgain }) => {
             fontSize={{ base: "14px", md: "16px" }}
             rightIcon={<AddIcon />}
             bg="whiteAlpha.200"
-            color="white"
+            color="black"
             border="1px solid"
             borderColor="whiteAlpha.300"
             _hover={{ 
@@ -116,10 +117,12 @@ const MyChats = ({ fetchAgain }) => {
         display="flex"
         flexDir="column"
         p={3}
-        bg="rgba(255, 255, 255, 0.1)"
+        // bg="rgba(255, 255, 255, 0.1)"
+        bg="transparent"
         backdropFilter="blur(15px)"
         w="100%"
         h="85vh"
+        color="black"
         borderRadius="xl"
         overflowY="auto"
         border="1px solid"
@@ -155,7 +158,7 @@ const MyChats = ({ fetchAgain }) => {
                   ? "rgba(255, 255, 255, 0.25)" 
                   : "rgba(255, 255, 255, 0.05)"
                 }
-                color="white"
+                color="black"
                 px={4}
                 py={3}
                 borderRadius="lg"
@@ -181,7 +184,8 @@ const MyChats = ({ fetchAgain }) => {
                   top: 0,
                   bottom: 0,
                   width: "4px",
-                  bg: "linear-gradient(to bottom, #38B2AC, #4FD1C7)",
+                  // bg: "linear-gradient(to bottom, #5f6e6eff, #4FD1C7)",
+                  bg: "transparent",
                   borderRadius: "0 4px 4px 0"
                 } : {}}
               >

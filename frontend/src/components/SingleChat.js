@@ -15,7 +15,7 @@ import animationData from "../animations/typing.json";
 import io from "socket.io-client";
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 import { ChatState } from "../Context/ChatProvider";
-const ENDPOINT = "http://localhost:5000"; // "https://talk-a-tive.herokuapp.com"; -> After deployment
+const ENDPOINT = "http://localhost:5000"; 
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
@@ -110,21 +110,18 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket.on("connected", () => setSocketConnected(true));
     socket.on("typing", () => setIsTyping(true));
     socket.on("stop typing", () => setIsTyping(false));
-
-    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     fetchMessages();
 
     selectedChatCompare = selectedChat;
-    // eslint-disable-next-line
   }, [selectedChat]);
 
   useEffect(() => {
     socket.on("message recieved", (newMessageRecieved) => {
       if (
-        !selectedChatCompare || // if chat is not selected or doesn't match current chat
+        !selectedChatCompare || 
         selectedChatCompare._id !== newMessageRecieved.chat._id
       ) {
         if (!notification.includes(newMessageRecieved)) {
@@ -162,7 +159,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     <>
       {selectedChat ? (
         <>
-          <Text
+          {/* <Text
             fontSize={{ base: "28px", md: "30px" }}
             pb={3}
             px={2}
@@ -195,7 +192,94 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                   />
                 </>
               ))}
-          </Text>
+          </Text> */}
+
+         <Text
+  fontSize={{ base: "28px", md: "30px" }}
+  pb={3}
+  px={2}
+  w="100%"
+  fontFamily="Work sans"
+  display="flex"
+  justifyContent="space-between"
+  alignItems="center"
+  // border-radius="20px"
+  borderRadius="10px"
+  margin="2px"
+  border="2px solid"
+  borderColor="gray.200"
+  bg="rgba(255, 255, 255, 0.8)"
+>
+  <Box display="flex" alignItems="center" gap={3}>
+    {/* Back Button (mobile only) */}
+    <IconButton
+      display={{ base: "flex", md: "none" }}
+      icon={<ArrowBackIcon />}
+      onClick={() => setSelectedChat("")}
+    />
+
+  {messages &&
+  (!selectedChat.isGroupChat ? (
+    <ProfileModal user={getSenderFull(user, selectedChat.users)}>
+      <Box
+        px={3}
+        py={1}
+        borderRadius="md"
+        marginTop="10px" 
+        // bg="lightgray"
+        // _hover={{ bg: "gray.200" }}
+        cursor="pointer"
+        fontWeight="bold"
+      >
+        {getSender(user, selectedChat.users)}
+      </Box>
+    </ProfileModal>
+  ) : (
+    <UpdateGroupChatModal
+      fetchMessages={fetchMessages}
+      fetchAgain={fetchAgain}
+      setFetchAgain={setFetchAgain}
+    >
+      <Box
+        px={3}
+        py={1}
+        borderRadius="md"
+        bg="blue.100"
+        _hover={{ bg: "blue.200" }}
+        cursor="pointer"
+        fontWeight="bold"
+      >
+        {selectedChat.chatName.toUpperCase()}
+      </Box>
+    </UpdateGroupChatModal>
+  ))}
+
+
+  </Box>
+
+  {/* Call Icons */}
+  <Box display="flex" alignItems="center" gap={2} height="100%" >
+    <IconButton
+      aria-label="Audio Call"
+      icon={<i className="fas fa-phone"></i>}
+      size="md"
+      variant="ghost"
+      colorScheme="teal"
+      _hover={{ bg: "teal.100" }}
+      onClick={() => console.log("Audio Call Clicked")}
+    />
+    <IconButton
+      aria-label="Video Call"
+      icon={<i className="fas fa-video"></i>}
+      size="md"
+      variant="ghost"
+      colorScheme="purple"
+      _hover={{ bg: "purple.100" }}
+      onClick={() => console.log("Video Call Clicked")}
+    />
+  </Box>
+</Text>
+
           <Box
             d="flex"
             flexDir="column"
@@ -205,7 +289,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             h="100%"
             borderRadius="lg"
             overflow="hidden"
-            bg="white"
+            // bg="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+            bg="transparent"
           >
             {loading ? (
               <Spinner
