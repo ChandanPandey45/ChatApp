@@ -38,7 +38,7 @@ const Verify = () => {
         },
       };
       const { data } = await axios.post(
-        "/api/user/verify",
+        `${BACKEND_URL}/api/user/verify`,
         { name, email, password, pic, otp },
         config
       );
@@ -52,7 +52,7 @@ const Verify = () => {
       });
 
       localStorage.setItem("userInfo", JSON.stringify(data));
-      history.push("/chats");
+      history.push(`${BACKEND_URL}/chats`);
     } catch (error) {
       toast({
         title: "OTP Verification Failed",

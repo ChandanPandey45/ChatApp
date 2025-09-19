@@ -118,7 +118,7 @@ const Signup = () => {
     };
     // Step 1: Send registration request (this triggers OTP email)
     await axios.post(
-      "/api/user",
+      `${BACKEND_URL}/api/user`,
       { name, email, password, pic },
       config
     );
@@ -132,7 +132,7 @@ const Signup = () => {
     });
 
     // 👉 Pass user data to verification screen
-    history.push("/verify", { name, email, password, pic });
+    history.push(`${BACKEND_URL}/verify`, { name, email, password, pic });
   } catch (error) {
     toast({
       title: "Error Occurred!",
