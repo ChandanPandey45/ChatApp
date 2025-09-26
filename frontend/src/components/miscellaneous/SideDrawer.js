@@ -65,7 +65,7 @@ function SideDrawer() {
       setLoading(true);
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
       const { data } = await axios.get(
-        `${BACKEND_URL}/api/user?search=${query}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/user?search=${query}`,
         config
       );
       setSearchResult(data);
@@ -99,7 +99,7 @@ function SideDrawer() {
         },
       };
       const { data } = await axios.post(
-        `${BACKEND_URL}/api/chat`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/chat`,
         { userId },
         config
       );

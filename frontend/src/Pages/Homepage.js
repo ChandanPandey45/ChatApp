@@ -19,7 +19,7 @@ function Homepage() {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userInfo"));
 
-    if (user) history.push(`${BACKEND_URL}/chats`);
+    if (user) history.push(`${process.env.REACT_APP_BACKEND_URL}/chats`);
   }, [history]);
 
   return (

@@ -40,8 +40,11 @@ const Login = () => {
         },
       };
 
+      const BASE_URL = process.env.REACT_APP_BACKEND_URL;;
+      console.log("Using Backend URL:", BASE_URL);
+
       const { data } = await axios.post(
-        `${BACKEND_URL}/api/user/login`,
+        `${BASE_URL}/api/user/login`,
         { email, password },
         config
       );
