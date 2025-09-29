@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
-"scripts": {
-  "start": "node server.js",
-  "server": "nodemon backend/server.js",
-  "build": "npm install --legacy-peer-deps --prefix frontend && npm run build --prefix frontend"
+  "scripts": {
+  "start": "concurrently \"npm run server\" \"npm run client\"",
+  "server": "nodemon server.js",
+  "client": "npm start --prefix ../frontend",
+  "build": "npm install --legacy-peer-deps --prefix ../frontend && npm run build --prefix ../frontend"
 },
   "keywords": [
     "mern",
@@ -25,5 +26,8 @@
     "nodemailer": "^7.0.6",
     "nodemon": "^2.0.7",
     "socket.io": "^4.1.2"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
   }
 }
