@@ -76,34 +76,46 @@ const Login = () => {
   return (
     <VStack spacing="10px">
       <FormControl id="email" isRequired>
-        <FormLabel>Email Address</FormLabel>
+        <FormLabel color="black">Email Address</FormLabel>
         <Input
           value={email}
           type="email"
           placeholder="Enter Your Email Address"
           onChange={(e) => setEmail(e.target.value)}
+          bg="white"
+          borderColor="#e9edef"
+          _hover={{ borderColor: "#00a884" }}
+          _focus={{ borderColor: "#00a884", boxShadow: "none" }}
+          color="black"
         />
       </FormControl>
       <FormControl id="password" isRequired>
-        <FormLabel>Password</FormLabel>
+        <FormLabel color="black">Password</FormLabel>
         <InputGroup size="md">
           <Input
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             type={show ? "text" : "password"}
             placeholder="Enter password"
+            bg="white"
+            borderColor="#e9edef"
+            _hover={{ borderColor: "#00a884" }}
+            _focus={{ borderColor: "#00a884", boxShadow: "none" }}
+            color="black"
           />
           <InputRightElement width="4.5rem">
-            <Button h="1.75rem" size="sm" onClick={handleClick}>
+            <Button h="1.75rem" size="sm" onClick={handleClick} bg="transparent" color="#00a884">
               {show ? "Hide" : "Show"}
             </Button>
           </InputRightElement>
         </InputGroup>
       </FormControl>
       <Button
-        colorScheme="blue"
+        bg="#00a884"
+        color="white"
+        _hover={{ bg: "#008f6f" }}
         width="100%"
-        style={{ marginTop: 15 }}
+        mt={15}
         onClick={submitHandler}
         isLoading={loading}
       >

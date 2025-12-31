@@ -18,44 +18,91 @@ function Homepage() {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userInfo"));
-
-    if (user) history.push(`${process.env.REACT_APP_BACKEND_URL}/chats`);
+    if (user) history.push("/chats");
   }, [history]);
 
   return (
-    <Container maxW="xl" centerContent>
+    <Box w="100vw" h="100vh" bg="#d1d7db" position="relative">
+      {/* WhatsApp Green Header */}
       <Box
-        d="flex"
-        justifyContent="center"
-        p={3}
-        bg="white"
         w="100%"
-        m="40px 0 15px 0"
-        borderRadius="lg"
-        borderWidth="1px"
+        h="220px"
+        bg="#00a884"
+        position="absolute"
+        top="0"
+      />
+
+      <Container
+        maxW="420px"
+        position="relative"
+        pt="80px"
       >
-        <Text fontSize="4xl" fontFamily="Work sans">
-          {/* Talk-A-Tive */}
-           The Messenger World !!
-        </Text>
-      </Box>
-      <Box bg="white" w="100%" p={4} borderRadius="lg" borderWidth="1px">
-        <Tabs isFitted variant="soft-rounded">
-          <TabList mb="1em">
-            <Tab>Login</Tab>
-            <Tab>Sign Up</Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel>
-              <Login />
-            </TabPanel>
-            <TabPanel>
-              <Signup />
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-      </Box>
-    </Container>
+        {/* Logo */}
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          mb={6}
+          color="white"
+        >
+          <i
+            className="fas fa-comment-dots"
+            style={{ fontSize: "34px", marginRight: "10px" }}
+          />
+          <Text
+            fontSize="lg"
+            fontWeight="600"
+            letterSpacing="1px"
+          >
+            THE MESSENGER WORLD
+          </Text>
+        </Box>
+
+        {/* Auth Card */}
+        <Box
+          bg="white"
+          borderRadius="md"
+          boxShadow="0 2px 12px rgba(0,0,0,0.15)"
+          p={6}
+        >
+          <Tabs isFitted variant="unstyled">
+            <TabList
+              display="flex"
+              borderBottom="1px solid #e9edef"
+              mb={4}
+            >
+              <Tab
+                fontWeight="600"
+                _selected={{
+                  color: "#00a884",
+                  borderBottom: "2px solid #00a884",
+                }}
+              >
+                Login
+              </Tab>
+              <Tab
+                fontWeight="600"
+                _selected={{
+                  color: "#00a884",
+                  borderBottom: "2px solid #00a884",
+                }}
+              >
+                Sign Up
+              </Tab>
+            </TabList>
+
+            <TabPanels>
+              <TabPanel px={0}>
+                <Login />
+              </TabPanel>
+              <TabPanel px={0}>
+                <Signup />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </Box>
+      </Container>
+    </Box>
   );
 }
 
