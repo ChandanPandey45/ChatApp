@@ -87,65 +87,65 @@ const Signup = () => {
 
 
   const submitHandler = async () => {
-  setPicLoading(true);
-  if (!name || !email || !password || !confirmpassword) {
-    toast({
-      title: "Please Fill all the Fields",
-      status: "warning",
-      duration: 5000,
-      isClosable: true,
-      position: "bottom",
-    });
-    setPicLoading(false);
-    return;
-  }
-  if (password !== confirmpassword) {
-    toast({
-      title: "Passwords Do Not Match",
-      status: "warning",
-      duration: 5000,
-      isClosable: true,
-      position: "bottom",
-    });
-    return;
-  }
+    setPicLoading(true);
+    if (!name || !email || !password || !confirmpassword) {
+      toast({
+        title: "Please Fill all the Fields",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setPicLoading(false);
+      return;
+    }
+    if (password !== confirmpassword) {
+      toast({
+        title: "Passwords Do Not Match",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      return;
+    }
 
-  try {
-    const config = {
-      headers: {
-        "Content-type": "application/json",
-      },
-    };
-    // Step 1: Send registration request (this triggers OTP email)
-    await axios.post(
-      `${process.env.REACT_APP_BACKEND_URL}/api/user`,
-      { name, email, password, pic },
-      config
-    );
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      // Step 1: Send registration request (this triggers OTP email)
+      await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/api/user`,
+        { name, email, password, pic },
+        config
+      );
 
-    toast({
-      title: "OTP sent to your email",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-      position: "bottom",
-    });
+      toast({
+        title: "OTP sent to your email",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
 
-    // 👉 Pass user data to verification screen
-    history.push(`${process.env.BACKEND_URLBACKEND_URL}/verify`, { name, email, password, pic });
-  } catch (error) {
-    toast({
-      title: "Error Occurred!",
-      description: error.response?.data?.message || error.message,
-      status: "error",
-      duration: 5000,
-      isClosable: true,
-      position: "bottom",
-    });
-  } finally {
-    setPicLoading(false);
-  }
-};
+      // 👉 Pass user data to verification screen
+      history.push("/verify", { name, email, password, pic });
+    } catch (error) {
+      toast({
+        title: "Error Occurred!",
+        description: error.response?.data?.message || error.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+    } finally {
+      setPicLoading(false);
+    }
+  };
 
   const postDetails = (pics) => {
     setPicLoading(true);
@@ -195,63 +195,89 @@ const Signup = () => {
   return (
     <VStack spacing="5px">
       <FormControl id="first-name" isRequired>
-        <FormLabel>Name</FormLabel>
+        <FormLabel color="black">Name</FormLabel>
         <Input
           placeholder="Enter Your Name"
           onChange={(e) => setName(e.target.value)}
+          bg="white"
+          borderColor="#e9edef"
+          _hover={{ borderColor: "#00a884" }}
+          _focus={{ borderColor: "#00a884", boxShadow: "none" }}
+          color="black"
         />
       </FormControl>
       <FormControl id="email" isRequired>
-        <FormLabel>Email Address</FormLabel>
+        <FormLabel color="black">Email Address</FormLabel>
         <Input
           type="email"
           placeholder="Enter Your Email Address"
           onChange={(e) => setEmail(e.target.value)}
+          bg="white"
+          borderColor="#e9edef"
+          _hover={{ borderColor: "#00a884" }}
+          _focus={{ borderColor: "#00a884", boxShadow: "none" }}
+          color="black"
         />
       </FormControl>
       <FormControl id="password" isRequired>
-        <FormLabel>Password</FormLabel>
+        <FormLabel color="black">Password</FormLabel>
         <InputGroup size="md">
           <Input
             type={show ? "text" : "password"}
             placeholder="Enter Password"
             onChange={(e) => setPassword(e.target.value)}
+            bg="white"
+            borderColor="#e9edef"
+            _hover={{ borderColor: "#00a884" }}
+            _focus={{ borderColor: "#00a884", boxShadow: "none" }}
+            color="black"
           />
           <InputRightElement width="4.5rem">
-            <Button h="1.75rem" size="sm" onClick={handleClick}>
+            <Button h="1.75rem" size="sm" onClick={handleClick} bg="transparent" color="#00a884">
               {show ? "Hide" : "Show"}
             </Button>
           </InputRightElement>
         </InputGroup>
       </FormControl>
       <FormControl id="password" isRequired>
-        <FormLabel>Confirm Password</FormLabel>
+        <FormLabel color="black">Confirm Password</FormLabel>
         <InputGroup size="md">
           <Input
             type={show ? "text" : "password"}
             placeholder="Confirm password"
             onChange={(e) => setConfirmpassword(e.target.value)}
+            bg="white"
+            borderColor="#e9edef"
+            _hover={{ borderColor: "#00a884" }}
+            _focus={{ borderColor: "#00a884", boxShadow: "none" }}
+            color="black"
           />
           <InputRightElement width="4.5rem">
-            <Button h="1.75rem" size="sm" onClick={handleClick}>
+            <Button h="1.75rem" size="sm" onClick={handleClick} bg="transparent" color="#00a884">
               {show ? "Hide" : "Show"}
             </Button>
           </InputRightElement>
         </InputGroup>
       </FormControl>
       <FormControl id="pic">
-        <FormLabel>Upload your Picture</FormLabel>
+        <FormLabel color="black">Upload your Picture</FormLabel>
         <Input
           type="file"
           p={1.5}
           accept="image/*"
           onChange={(e) => postDetails(e.target.files[0])}
+          bg="white"
+          borderColor="#e9edef"
+          _hover={{ borderColor: "#00a884" }}
+          color="black"
         />
       </FormControl>
       <Button
-        colorScheme="blue"
+        bg="#00a884"
+        color="white"
+        _hover={{ bg: "#008f6f" }}
         width="100%"
-        style={{ marginTop: 15 }}
+        mt={15}
         onClick={submitHandler}
         isLoading={picLoading}
       >

@@ -1,11 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&display=swap");
 
 .App {
   min-height: 100vh;
   display: flex;
-  /* background-image: url("./background.jpeg"); */
-    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
-
+  background: linear-gradient(145deg, #1a1c2e 0%, #2d3047 40%, #1e2235 100%);
   background-position: center;
   background-size: cover;
 }

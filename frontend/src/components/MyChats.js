@@ -1,23 +1,92 @@
-import { AddIcon } from "@chakra-ui/icons";
+import { AddIcon, SearchIcon } from "@chakra-ui/icons";
 import { Box, Stack, Text } from "@chakra-ui/layout";
-import { useToast, Button } from "@chakra-ui/react";
+import { useToast, Button, Avatar, Input, InputGroup, InputLeftElement, Spinner } from "@chakra-ui/react";
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getSender } from "../config/ChatLogics";
 import ChatLoading from "./ChatLoading";
 import GroupChatModal from "./miscellaneous/GroupChatModal";
 import { ChatState } from "../Context/ChatProvider";
+import UserListItem from "./userAvatar/UserListItem";
+import { useHistory } from "react-router-dom";
 
 const MyChats = ({ fetchAgain }) => {
-  const toast = useToast();
-  const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
+  const [loggedUser, setLoggedUser] = useState();
+  const [search, setSearch] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [loadingChat, setLoadingChat] = useState(false);
 
-  const fetchChats = async () => {
-    if (!user || !user.token) return;
+  const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
+  const toast = useToast();
+  const history = useHistory();
+
+  const handleSearch = async (query) => {
+    setSearch(query);
+    if (!query) {
+      setSearchResult([]);
+      return;
+    }
 
     try {
+      setLoading(true);
       const config = {
-        headers: { Authorization: `Bearer ${user.token}` },
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+
+      const { data } = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/user?search=${query}`, config);
+      setLoading(false);
+      setSearchResult(data);
+    } catch (error) {
+      toast({
+        title: "Error Occured!",
+        description: "Failed to Load the Search Results",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom-left",
+      });
+      setLoading(false);
+    }
+  };
+
+  const accessChat = async (userId) => {
+    try {
+      setLoadingChat(true);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      const { data } = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/chat`, { userId }, config);
+
+      if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
+      setSelectedChat(data);
+      setLoadingChat(false);
+      setSearch("");
+      setSearchResult([]);
+    } catch (error) {
+      toast({
+        title: "Error fetching the chat",
+        description: error.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom-left",
+      });
+      setLoadingChat(false);
+    }
+  };
+
+  const fetchChats = async () => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
       };
 
       const { data } = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/chat`, config);
@@ -25,7 +94,7 @@ const MyChats = ({ fetchAgain }) => {
     } catch (error) {
       toast({
         title: "Error Occurred!",
-        description: error.response?.data?.message || "Failed to load chats",
+        description: "Failed to Load the chats",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -34,189 +103,164 @@ const MyChats = ({ fetchAgain }) => {
     }
   };
 
+  const logoutHandler = () => {
+    localStorage.removeItem("userInfo");
+    history.push("/");
+  };
+
   useEffect(() => {
+    setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
     fetchChats();
-  }, [fetchAgain, user]);
+  }, [fetchAgain]);
 
   return (
     <Box
       display={{ base: selectedChat ? "none" : "flex", md: "flex" }}
       flexDir="column"
       alignItems="center"
-      p={4}
-      // bg="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
-      bg="transparent"
-      w={{ base: "100%", md: "31%" }}
-      borderRadius="xl"
-      borderWidth="1px"
-      borderColor="whiteAlpha.200"
-      boxShadow="0 8px 32px rgba(0, 0, 0, 0.15)"
-      position="relative"
-      overflow="hidden"
-      _before={{
-        content: '""',
-        position: "absolute",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        bgImage: "radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%)",
-        pointerEvents: "none"
-      }}
+      bg="white"
+      w={{ base: "100%", md: "30%" }}
+      borderRight="1px solid #e0e0e0"
+      height="100%"
     >
       {/* Header */}
       <Box
-        pb={4}
-        px={2}
-        fontSize={{ base: "24px", md: "28px" }}
-        fontFamily="Work sans"
-        fontWeight="bold"
-        display="flex"
+        px={4}
+        py={3}
+        bg="#f0f2f5"
         w="100%"
+        display="flex"
         justifyContent="space-between"
         alignItems="center"
-        color="white"
-        position="relative"
-        zIndex={1}
+        borderBottom="1px solid #d1d7db"
       >
-        <Text
-          textShadow="0 2px 4px rgba(0,0,0,0.3)"
-          bgGradient="linear(to-r, white, whiteAlpha.900)"
-          bgClip="text"
-          fontSize={{ base: "34px", md: "28px"}}
-          color="black"
-        >
-          My Chats
-        </Text>
-        <GroupChatModal>
+        <Avatar
+          size="sm"
+          cursor="pointer"
+          name={user.name}
+          src={user.pic}
+        />
+        <Box display="flex" gap={4}>
+          <GroupChatModal>
+            <Button
+              size="sm"
+              variant="ghost"
+              color="#54656f"
+              _hover={{ bg: "rgba(0,0,0,0.1)" }}
+              fontSize="20px"
+              p={0}
+            >
+              <i className="fas fa-users"></i>
+            </Button>
+          </GroupChatModal>
+
           <Button
-            display="flex"
-            fontSize={{ base: "14px", md: "16px" }}
-            rightIcon={<AddIcon />}
-            bg="whiteAlpha.200"
-            color="black"
-            border="1px solid"
-            borderColor="whiteAlpha.300"
-            _hover={{ 
-              bg: "whiteAlpha.300", 
-              transform: "translateY(-2px)",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.15)"
-            }}
-            _active={{ transform: "translateY(0)" }}
-            transition="all 0.2s ease"
-            backdropFilter="blur(10px)"
-            borderRadius="lg"
+            size="sm"
+            variant="ghost"
+            color="#54656f"
+            _hover={{ bg: "rgba(0,0,0,0.1)" }}
+            fontSize="20px"
+            p={0}
+            onClick={logoutHandler}
+            title="Logout"
           >
-            New Group
+            <i className="fas fa-sign-out-alt"></i>
           </Button>
-        </GroupChatModal>
+        </Box>
+      </Box>
+
+      {/* Search Bar */}
+      <Box px={3} py={2} w="100%" borderBottom="1px solid #f0f2f5">
+        <InputGroup>
+          <InputLeftElement pointerEvents="none">
+            <SearchIcon color="gray.400" />
+          </InputLeftElement>
+          <Input
+            placeholder="Search or start new chat"
+            bg="#f0f2f5"
+            border="none"
+            fontSize="sm"
+            _placeholder={{ color: "gray.500" }}
+            _focus={{ bg: "white", boxShadow: "0 0 0 1px #00a884" }}
+            borderRadius="lg"
+            onChange={(e) => handleSearch(e.target.value)}
+            value={search}
+          />
+        </InputGroup>
       </Box>
 
       {/* Chat List */}
       <Box
         display="flex"
         flexDir="column"
-        p={3}
-        // bg="rgba(255, 255, 255, 0.1)"
-        bg="transparent"
-        backdropFilter="blur(15px)"
         w="100%"
-        h="85vh"
-        color="black"
-        borderRadius="xl"
+        h="100%"
         overflowY="auto"
-        border="1px solid"
-        borderColor="whiteAlpha.200"
-        position="relative"
-        zIndex={1}
-        sx={{
-          "&::-webkit-scrollbar": { 
-            width: "8px"
-          },
-          "&::-webkit-scrollbar-track": {
-            bg: "whiteAlpha.100",
-            borderRadius: "full"
-          },
-          "&::-webkit-scrollbar-thumb": { 
-            bg: "whiteAlpha.400", 
-            borderRadius: "full",
-            border: "2px solid transparent",
-            backgroundClip: "padding-box"
-          },
-          "&::-webkit-scrollbar-thumb:hover": { 
-            bg: "whiteAlpha.600"
-          }
-        }}
+        bg="white"
       >
-        {chats ? (
-          <Stack spacing={2}>
-            {chats.map((chat) => (
-              <Box
-                onClick={() => setSelectedChat(chat)}
-                cursor="pointer"
-                bg={selectedChat?._id === chat._id 
-                  ? "rgba(255, 255, 255, 0.25)" 
-                  : "rgba(255, 255, 255, 0.05)"
-                }
-                color="black"
-                px={4}
-                py={3}
-                borderRadius="lg"
-                key={chat._id}
-                border="1px solid"
-                borderColor={selectedChat?._id === chat._id 
-                  ? "whiteAlpha.400" 
-                  : "whiteAlpha.100"
-                }
-                _hover={{ 
-                  bg: "rgba(255, 255, 255, 0.15)",
-                  transform: "translateX(4px)",
-                  borderColor: "whiteAlpha.300"
-                }}
-                transition="all 0.2s ease"
-                backdropFilter="blur(10px)"
-                position="relative"
-                overflow="hidden"
-                _before={selectedChat?._id === chat._id ? {
-                  content: '""',
-                  position: "absolute",
-                  left: 0,
-                  top: 0,
-                  bottom: 0,
-                  width: "4px",
-                  // bg: "linear-gradient(to bottom, #5f6e6eff, #4FD1C7)",
-                  bg: "transparent",
-                  borderRadius: "0 4px 4px 0"
-                } : {}}
-              >
-                <Text 
-                  fontWeight="semibold" 
-                  fontSize="md"
-                  textShadow="0 1px 2px rgba(0,0,0,0.2)"
-                  noOfLines={1}
-                >
-                  {!chat.isGroupChat ? getSender(user, chat.users) : chat.chatName}
-                </Text>
-                {chat.latestMessage && (
-                  <Text 
-                    fontSize="sm" 
-                    noOfLines={1}
-                    color="whiteAlpha.800"
-                    mt={1}
-                  >
-                    <Text as="span" fontWeight="medium" color="whiteAlpha.900">
-                      {chat.latestMessage.sender.name}:
-                    </Text>{" "}
-                    {chat.latestMessage.content.length > 50
-                      ? chat.latestMessage.content.substring(0, 50) + "..."
-                      : chat.latestMessage.content}
-                  </Text>
-                )}
-              </Box>
-            ))}
-          </Stack>
+        {search ? (
+          // Search Results
+          loading ? (
+            <ChatLoading />
+          ) : (
+            searchResult?.map((user) => (
+              <UserListItem
+                key={user._id}
+                user={user}
+                handleFunction={() => accessChat(user._id)}
+              />
+            ))
+          )
         ) : (
-          <ChatLoading />
+          // Existing Chats
+          chats ? (
+            <Stack spacing={0}>
+              {chats.map((chat) => (
+                <Box
+                  onClick={() => setSelectedChat(chat)}
+                  cursor="pointer"
+                  bg={selectedChat === chat ? "#f0f2f5" : "white"}
+                  color="black"
+                  px={4}
+                  py={3}
+                  key={chat._id}
+                  borderBottom="1px solid #f0f2f5"
+                  _hover={{ bg: "#f5f6f6" }}
+                  transition="background 0.2s"
+                  display="flex"
+                  alignItems="center"
+                >
+                  <Avatar
+                    mr={4}
+                    size="md"
+                    cursor="pointer"
+                    name={!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName}
+                    src={!chat.isGroupChat ? getSender(loggedUser, chat.users) : undefined}
+                  />
+                  <Box flex="1">
+                    <Text fontSize="16px" fontWeight="400" color="#111b21">
+                      {!chat.isGroupChat
+                        ? getSender(loggedUser, chat.users)
+                        : chat.chatName}
+                    </Text>
+                    {chat.latestMessage && (
+                      <Text fontSize="13px" color="#667781" noOfLines={1}>
+                        <Text as="span" fontWeight="400">
+                          {chat.latestMessage.sender.name === loggedUser?.name ? "You: " : ""}
+                        </Text>
+                        {chat.latestMessage.content.length > 50
+                          ? chat.latestMessage.content.substring(0, 51) + "..."
+                          : chat.latestMessage.content}
+                      </Text>
+                    )}
+                  </Box>
+                  {/* Optional: Add Time rendering logic here later */}
+                </Box>
+              ))}
+            </Stack>
+          ) : (
+            <ChatLoading />
+          )
         )}
       </Box>
     </Box>

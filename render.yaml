@@ -53,5 +53,5 @@ services:
     staticPublishPath: build
     autoDeploy: true
     envVars:
-      - key: REACT_APP_API_URL
+      - key: REACT_APP_BACKEND_URL
         value: https://chat-app-backend.onrender.com   # <-- backend URL

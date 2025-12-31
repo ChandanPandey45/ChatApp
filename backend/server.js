@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const connectDB = require("./config/db");
 const dotenv = require("dotenv");
 const userRoutes = require("./routes/userRoutes");
@@ -12,6 +13,9 @@ dotenv.config();
 connectDB();
 const app = express();
 
+// Enable CORS for all origins
+app.use(cors());
+
 app.use(express.json()); // to accept json data
 
 app.use("/api/user", userRoutes);
@@ -20,16 +24,21 @@ app.use("/api/message", messageRoutes);
 
 
 
+// Serve frontend build
+const buildPath = path.join(__dirname, "../frontend/build");
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "/frontend/build")));
+  app.use(express.static(buildPath));
 
-  app.get("*", (req, res) =>
-    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
-  );
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api/") || req.path.startsWith("/socket.io/")) {
+      return next();
+    }
+    res.sendFile(path.resolve(buildPath, "index.html"));
+  });
 } else {
   app.get("/", (req, res) => {
-    res.send("API is running..");
-  });
+    res.send("API is running successfully");
+  })
 }
 
 
@@ -47,8 +56,8 @@ console.log("url: ", process.env.FRONTEND_URL);
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-  origin: process.env.FRONTEND_URL || "http://localhost:5173",
-}
+    origin: "*",
+  }
 
 });
 
@@ -76,7 +85,7 @@ io.on("connection", (socket) => {
 
       socket.in(user._id).emit("message recieved", newMessageRecieved);
     });
-  }); 
+  });
 
   socket.off("setup", () => {
     console.log("USER DISCONNECTED");

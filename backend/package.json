@@ -4,11 +4,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-  "start": "concurrently \"npm run server\" \"npm run client\"",
-  "server": "nodemon server.js",
-  "client": "npm start --prefix ../frontend",
-  "build": "npm install --legacy-peer-deps --prefix ../frontend && npm run build --prefix ../frontend"
-},
+    "start": "node server.js",
+    "dev": "concurrently \"nodemon server.js\" \"npm start --prefix ../frontend\"",
+    "build": "npm install --prefix ../frontend --legacy-peer-deps && npm run build --prefix ../frontend"
+  },
   "keywords": [
     "mern",
     "chat-app"
@@ -18,11 +17,12 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
+    "cors": "^2.8.5",
     "dotenv": "^9.0.2",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.12.9",
+    "mongoose": "^9.1.1",
     "nodemailer": "^7.0.6",
     "nodemon": "^2.0.7",
     "socket.io": "^4.1.2"
